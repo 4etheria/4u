@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan untukmu</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #16331c;
+            color: #ffffff;
+            font-family: Poppins, sans-serif;
+            overflow: hidden;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .text {
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: 2;
+        }
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.3);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: floatUp 4s linear infinite;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="text" id="text"></div>
+    
+    <script>
+        const messages = [
+            "halo sedulur",
+            "gw Ding",
+            "di hari yang Fitri ini",
+            "gw mau minta maaf yang sebesar-besarnya",
+            "kalo selama ketemu gw",
+            "gw ada salah perkataan",
+            "sikap yang kurang berkenan",
+            "atau hal lain yang bikin kalian ga nyaman",
+            "karna sejatinya setiap manusia sering kali berbuat salah",
+            "dan ga ada manusia yang sempurna",
+            "semoga di hari yang Fitri ini",
+            "dan hari-hari selanjutnya",
+            "kita semua diberkahi kebahagiaan oleh Allah SWT.",
+            "sehat wal afiat",
+            "umur yang panjang",
+            "dilancarkan rezekinya",
+            "dan dijauhkan dari hal-hal yang buruk",
+            "تَقَبَّلَ اللّهُ مِنَّا وَمنِْكُمْ",
+            "صِيَامَنَا وَصِيَامَكُمْ",
+            "وَكُلُّ عَامٍ وَأَنْتُمْ بِخَيْرٍ",
+            "اللهُ أَكْبَرُ",
+            "اللهُ أَكْبَرُ",
+            "اللهُ أَكْبَرُ",
+            "وَلِلّٰهِ الْحَمْدُ",
+            "Happy Eid al-Fitr 1446 H",
+            "مِنَ الْعَائِدِيْن وَالْفَائِزِيْن",
+            "Mohon maaf lahir dan batin",
+            ""
+        ];
+        
+        let index = 0;
+        const textElement = document.getElementById("text");
+
+        function changeText() {
+            textElement.style.opacity = 0;
+            setTimeout(() => {
+                textElement.textContent = messages[index];
+                textElement.style.opacity = 1;
+                index = (index + 1) % messages.length;
+            }, 1500);
+        }
+        
+        changeText();
+        setInterval(changeText, 4000);
+
+        function createParticles() {
+            const particlesContainer = document.getElementById("particles");
+            for (let i = 0; i < 50; i++) {
+                let particle = document.createElement("div");
+                particle.classList.add("bubble");
+                particle.style.left = Math.random() * 100 + "vw";
+                particle.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+    </script>
+</body>
+</html>
