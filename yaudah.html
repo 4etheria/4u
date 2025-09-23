@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4u</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #303030;
+      color: #ffffff;
+      font-family: Poppins, sans-serif;
+      overflow: hidden;
+      text-align: center;
+      position: relative;
+    }
+    .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("dia.jpg");
+    background-size: cover;      /* penuh layar */
+    background-position: center; /* selalu fokus tengah */
+    background-repeat: no-repeat;
+    filter: brightness(0.5);
+    opacity: 0.9;
+    z-index: 0;
+    }
+    .text {
+      font-size: 1.5rem;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      z-index: 2;
+      white-space: pre-line; /* biar enter di lirik kebaca */
+    }
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    .bubble {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.322);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      opacity: 0.5;
+      animation: floatUp 4s linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    .music-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 3;
+      backdrop-filter: blur(5px);
+      transition: background 0.3s ease;
+    }
+    .music-btn:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+  </style>
+</head>
+<body>
+    <div class="background"></div>
+  <div class="particles" id="particles"></div>
+  <div class="text" id="text"></div>
+
+  <!-- 🎵 Audio -->
+  <audio id="bg-music">
+    <source src="nadhif.mp3" type="audio/mpeg">
+    Browser kamu tidak mendukung audio.
+  </audio>
+
+  <!-- 🎵 Tombol -->
+  <button class="music-btn" id="music-btn">▶ Play Music</button>
+
+  <script>
+    // 🎶 Lirik + durasi tampil per baris (detik)
+    const lyrics = [
+      { line: "...", duration: 6.5 },
+      { line: "Aku ingin jadi teman nyamanmu", duration: 6 },
+      { line: "Tempat kau hilangkan keluh kesahmu", duration: 5.5 },
+      { line: "Kita berbincang tak karuan, tanpa beban", duration: 5 },
+      { line: "Dan juga khayalan tentang masa depan", duration: 5 },
+      { line: "Ku tak ingin cepat berlalu (berlalu)", duration: 5 },
+      { line: "Waktu yang kupunya denganmu", duration: 4 },
+      { line: "Kita berdansa dan tertawa, gandeng tangan", duration: 5 },
+      { line: "Semoga bergema sampai selamanya", duration: 5 },
+      { line: "Dunia pasti ada akhirnya", duration: 4 },
+      { line: "Bintang-bintang pun ada umurnya", duration: 4 },
+      { line: "Maka tenang saja, kita di sini berdua", duration: 5 },
+      { line: "Nikmati sementara yang ada", duration: 5 },
+      { line: "Bersandar padaku, taruh di bahuku", duration: 5 },
+      { line: "Relakan semua, bebas semaumu", duration: 4 },
+      { line: "Percayalah, ini sayang terlewatkan", duration: 5 },
+      { line: "Kusampaikan dalam nyanyian, bergema sampai selamanya", duration: 6 },
+      { line: "Dunia pasti ada akhirnya", duration: 4 },
+      { line: "Bintang-bintang pun ada umurnya", duration: 4 },
+      { line: "Maka tenang saja, kita di sini berdua", duration: 5 },
+      { line: "Nikmati sementara yang ada", duration: 5 },
+      { line: "Dunia pasti ada akhirnya", duration: 4 },
+      { line: "Bintang-bintang pun ada umurnya", duration: 4 },
+      { line: "Maka tenang saja, kita di sini berdua", duration: 5 },
+      { line: "Nikmati sementara yang ada", duration: 5 },
+      { line: "Semoga bergema selamanya", duration: 6 },
+    ];
+
+    let lyricIndex = 0;
+    const textElement = document.getElementById("text");
+    const music = document.getElementById("bg-music");
+    const musicBtn = document.getElementById("music-btn");
+    let isPlaying = false;
+    let lyricTimer;
+
+    function showLyric() {
+      if (lyricIndex >= lyrics.length) return;
+      textElement.style.opacity = 0;
+      setTimeout(() => {
+        textElement.textContent = lyrics[lyricIndex].line;
+        textElement.style.opacity = 1;
+        lyricTimer = setTimeout(() => {
+          lyricIndex++;
+          showLyric();
+        }, lyrics[lyricIndex].duration * 1000);
+      }, 500);
+    }
+
+    musicBtn.addEventListener("click", () => {
+      if (isPlaying) {
+        music.pause();
+        musicBtn.textContent = "▶ Play Music";
+        clearTimeout(lyricTimer);
+      } else {
+        music.play();
+        musicBtn.textContent = "⏸ Pause Music";
+        lyricIndex = 0;
+        showLyric();
+      }
+      isPlaying = !isPlaying;
+    });
+
+    // Bubble effect
+    function createParticles() {
+      const particlesContainer = document.getElementById("particles");
+      for (let i = 0; i < 50; i++) {
+        let particle = document.createElement("div");
+        particle.classList.add("bubble");
+        particle.style.left = Math.random() * 100 + "vw";
+        particle.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        particlesContainer.appendChild(particle);
+      }
+    }
+    createParticles();
+  </script>
+</body>
+</html>
